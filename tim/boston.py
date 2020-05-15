@@ -1,6 +1,8 @@
 from keras.datasets import boston_housing
 from keras import models, layers
 
+from sklearn.linear_model import Lasso,LinearRegression
+
 import numpy as np
 
 (train_data,train_targets), (test_data,test_targets) = boston_housing.load_data()
@@ -50,7 +52,20 @@ def k_fold_validation(k=4,num_epochs=100,dim_middle_layer=64):
         all_scores.append(val_mae)
     return model, all_scores
 
+def fit_linear_model(method='lasso'):
+    if method == 'lasso':
+        linmodel = Lasso()
+    if method == 'regression':
+        linmodel = LinearRegression()
+    linmodel.fit(train_data,train_targets)
+    pred = linmodel.predict(test_data)
+    mae_score = np.mean(np.abs((pred-test_targets)/test_targets*100))
+    return mae_score
+
+
 if __name__ == '__main__':
-    model, all_scores = k_fold_validation(k=4,num_epochs=500)
+    model, all_scores = k_fold_validation(k=4,num_epochs=100, dim_middle_layer=10)
     print(all_scores)
+    print('lasso score is ',fit_linear_model('lasso'))
+    print('linear regression score is ', fit_linear_model('regression'))
 
