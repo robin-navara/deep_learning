@@ -5,6 +5,8 @@ from sklearn.linear_model import Lasso,LinearRegression
 
 import numpy as np
 
+
+
 (train_data,train_targets), (test_data,test_targets) = boston_housing.load_data()
 
 #normalize data
@@ -24,11 +26,8 @@ def build_model(dimension_mid_layer=64):
     return model
 
 def k_fold_validation(k=4,num_epochs=100,dim_middle_layer=64):
-    k = 4
     num_val_samples = len(train_data) // k
-    num_epochs = 100
     all_scores = []
-    dim_middle_layer = 64
     for i in range(k):
         print('processing fold #', i)
         val_data = train_data[i * num_val_samples:(i + 1) * num_val_samples, :]
@@ -54,17 +53,17 @@ def k_fold_validation(k=4,num_epochs=100,dim_middle_layer=64):
 
 def fit_linear_model(method='lasso'):
     if method == 'lasso':
-        linmodel = Lasso()
+        linmodel = Lasso(alpha=.5)
     if method == 'regression':
         linmodel = LinearRegression()
     linmodel.fit(train_data,train_targets)
     pred = linmodel.predict(test_data)
-    mae_score = np.mean(np.abs((pred-test_targets)/test_targets*100))
+    mae_score = np.mean(np.abs((pred-test_targets)))
     return mae_score
 
 
 if __name__ == '__main__':
-    model, all_scores = k_fold_validation(k=4,num_epochs=100, dim_middle_layer=10)
+    model, all_scores = k_fold_validation(k=4,num_epochs=80, dim_middle_layer=1)
     print(all_scores)
     print('lasso score is ',fit_linear_model('lasso'))
     print('linear regression score is ', fit_linear_model('regression'))
