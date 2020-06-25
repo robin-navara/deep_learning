@@ -1,12 +1,12 @@
+import matplotlib.pyplot as plt
 import os, shutil
 from keras import layers, models, optimizers
 from keras.preprocessing.image import ImageDataGenerator
-import matplotlib.pyplot as plt
 
 
 dirs = ['test','train','validation']
 animals = ['zebra', 'buffalo', 'rhino', 'elephant']
-base_dir = '/Users/tim/Documents/Tutorials/Deep Learning in Python/deep_learning/tim/safari-wildlife'
+base_dir = '/Users/robinvanderveken/Projects/Safari'
 
 
 def split_files():
@@ -87,12 +87,12 @@ validation_generator = test_datagen.flow_from_directory(
 history = model.fit_generator(
     train_generator,
     steps_per_epoch=100,
-    epochs=100,
+    epochs=50,
     validation_data=validation_generator,
     validation_steps=50
 )
 
-model.save(os.path.join(base_dir,'safariv2.h5'))
+model.save(os.path.join(base_dir,'safariv3.h5'))
 
 acc = history.history['acc']
 val_acc = history.history['val_acc']
